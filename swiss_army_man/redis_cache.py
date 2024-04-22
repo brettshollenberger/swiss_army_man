@@ -4,7 +4,7 @@ import os
 import json
 import yaml
 from typing import Callable
-from bart_pipeline.utils.project_root import project_root
+from project_root import project_root
 from tqdm import tqdm
 
 class RedisCache:
