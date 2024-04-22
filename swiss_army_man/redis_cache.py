@@ -48,6 +48,9 @@ class RedisCache:
         self.REDIS.set(key, value)
         self.REDIS.set(f"{key}_type", redis_type)
 
+    def lpush(self, key, value):
+        return self.REDIS.lpush(key, value)
+
     def get_redis_key(self, raw_value: str, redis_prefix: str) -> str:
         return f'{redis_prefix}:{raw_value.lower().replace(" ", "_")}'
 

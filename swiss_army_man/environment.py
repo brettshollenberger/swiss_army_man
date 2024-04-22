@@ -2,7 +2,7 @@ import os
 import re
 import sys
 import yaml
-from .project_root import project_root
+from . import project_root
 
 def erb_substitute(match):
     env_var = match.group(1)
@@ -23,7 +23,7 @@ def db_config():
     else:
         django_env = os.getenv('DJANGO_ENV', 'development')
 
-    with open(os.path.join(project_root(), 'db/config.yml'), 'r') as f:
+    with open(os.path.join(project_root('db/config.yml')), 'r') as f:
         db_config = load_erb_yaml(f)
 
     # Get the configuration for the current environment
