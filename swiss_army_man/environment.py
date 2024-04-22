@@ -28,5 +28,3 @@ def db_config():
 
     # Get the configuration for the current environment
     return db_config[django_env]
-
-app_yaml = load_erb_yaml(open(project_root('config/application.yml'), 'r'))
