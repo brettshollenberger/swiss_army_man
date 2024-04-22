@@ -10,13 +10,13 @@ def standardize_date(date):
         date = pd.to_datetime(date).tz_localize("UTC")
     return date
 
-def standardize_dates(df):
-    df["CREATED_DATE"] = df["CREATED_DATE"].progress_apply(standardize_date)
+def standardize_dates(df, date_col="CREATED_DATE"):
+    df[date_col] = df[date_col].progress_apply(standardize_date)
 
-    df["DATE"] = pd.to_datetime(df["CREATED_DATE"].dt.date)
+    df["DATE"] = pd.to_datetime(df[date_col].dt.date)
     return df
 
 def standardize_and_sort_dates(df):
     df = standardize_dates(df)
-    df = df.sort_values(by=["CREATED_DATE"], ascending=True)
+    df = df.sort_values(by=[date_col], ascending=True)
     return df
