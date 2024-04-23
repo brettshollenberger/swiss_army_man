@@ -141,4 +141,5 @@ class DateUtils():
     def add_minutes_poisson(date: str, avg_minutes_to_add: int) -> str:
         minutes = poisson.rvs(avg_minutes_to_add)
         date = date + timedelta(minutes=minutes)
-        return DateUtils.get_random_timestamp(date)
+        seconds = str(random.randint(0, 59)).zfill(2)
+        return ":".join(f"{date}".split(":")[0:2] + [seconds])
