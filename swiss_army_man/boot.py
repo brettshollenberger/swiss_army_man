@@ -2,6 +2,7 @@ try:
     from abc import ABC
     class Bootloader(ABC):
         def before_boot(self):
+            print("Before boot...")
             import sys
             import os
             from dotenv import load_dotenv
@@ -38,8 +39,8 @@ try:
             self.after_boot()
 
         def after_boot(self):
+            print("After boot...")
             return True
-    Bootloader().boot()
 except:
     # nbd...
     True
