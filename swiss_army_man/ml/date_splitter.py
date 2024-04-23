@@ -78,11 +78,6 @@ class DateSplitter():
         return DateSplitter.last_updated != DateSplitter.read_last_updated(root_path)
 
     @staticmethod
-    def get_days_ago(days_ago, date=datetime.now()):
-        x_days_ago = date - timedelta(days=days_ago)
-        return x_days_ago.strftime("%Y-%m-%d")
-
-    @staticmethod
     def validate_splits(X_train, X_test, X_valid, y_train, y_test, y_valid, orig_df, orig_ys):
         assert set(X_train.index).isdisjoint(set(X_test.index)
                                              ), "Overlap between train and validation sets"

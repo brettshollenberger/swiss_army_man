@@ -5,5 +5,5 @@ from .grep import *
 from .is_iterable import *
 from .parse_datetime import *
 from .singleton import *
-from .standardize_dates import *
+from .date_utils import DateUtils
 from .string_methods import *
