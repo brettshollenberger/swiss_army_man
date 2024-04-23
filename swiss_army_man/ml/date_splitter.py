@@ -4,9 +4,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 import pyarrow as pa
 import pyarrow.parquet as pq
-from bart_pipeline.utils.project_root import project_root
-from bart_pipeline.utils.standardize_dates import standardize_and_sort_dates
-from bart_pipeline.services.dataloaders.utils.asset_preprocessor import AssetPreprocessor
+from swiss_army_man.utils import project_root, standardize_and_sort_dates
+from swiss_army_man.ml import AssetPreprocessor
 
 class DateSplitter():
     X_train = None
@@ -18,14 +17,14 @@ class DateSplitter():
     last_updated = None
 
     @staticmethod
-    def write_split_files(root_path, X_train, X_test, X_valid, y_train, y_test, y_valid):
+    def write_split_files(root_path, X_train, X_test, X_valid, y_train, y_test, y_valid, target_col="REV"):
         # Convert to PyArrow Tables
         train_table = pa.Table.from_pandas(X_train)
         test_table = pa.Table.from_pandas(X_test)
         valid_table = pa.Table.from_pandas(X_valid)
-        train_target_table = pa.Table.from_pandas(y_train.to_frame(name='REV'))
-        test_target_table = pa.Table.from_pandas(y_test.to_frame(name='REV'))
-        valid_target_table = pa.Table.from_pandas(y_valid.to_frame(name='REV'))
+        train_target_table = pa.Table.from_pandas(y_train.to_frame(name=target_col))
+        test_target_table = pa.Table.from_pandas(y_test.to_frame(name=target_col))
+        valid_target_table = pa.Table.from_pandas(y_valid.to_frame(name=target_col))
 
         pq.write_table(train_table, os.path.join(root_path, 'X_train.parquet'))
         pq.write_table(test_table, os.path.join(root_path, 'X_test.parquet'))
@@ -38,45 +37,45 @@ class DateSplitter():
             path = os.path.join(root_path, f"{file}.parquet")
             AssetPreprocessor.dvc_add(path)
 
-        DateSplitter.write_last_updated()
+        DateSplitter.write_last_updated(root_path)
 
     @classmethod
-    def load_split_files(cls, root_path):
-        if cls.X_train is None or DateSplitter.files_have_changed():
+    def load_split_files(cls, root_path, target_col="REV"):
+        if cls.X_train is None or DateSplitter.files_have_changed(root_path):
             cls.X_train = pd.read_parquet(os.path.join(root_path, 'X_train.parquet'))
             cls.X_test = pd.read_parquet(os.path.join(root_path, 'X_test.parquet'))
             cls.X_valid = pd.read_parquet(os.path.join(root_path, 'X_valid.parquet'))
 
-            cls.y_train = np.array(pd.read_parquet(os.path.join(root_path, 'y_train.parquet'))["REV"])
-            cls.y_test = np.array(pd.read_parquet(os.path.join(root_path, 'y_test.parquet'))["REV"])
-            cls.y_valid = np.array(pd.read_parquet(os.path.join(root_path, 'y_valid.parquet'))["REV"])
+            cls.y_train = np.array(pd.read_parquet(os.path.join(root_path, 'y_train.parquet'))[target_col])
+            cls.y_test = np.array(pd.read_parquet(os.path.join(root_path, 'y_test.parquet'))[target_col])
+            cls.y_valid = np.array(pd.read_parquet(os.path.join(root_path, 'y_valid.parquet'))[target_col])
 
         return cls.X_train, cls.X_test, cls.X_valid, cls.y_train, cls.y_test, cls.y_valid
 
     @staticmethod
-    def set_last_updated():
-        DateSplitter.last_updated = DateSplitter.read_last_updated()
+    def set_last_updated(root_path):
+        DateSplitter.last_updated = DateSplitter.read_last_updated(root_path)
 
     @staticmethod
-    def last_updated_path():
-        return project_root("bart_pipeline/services/dataloaders/utils/dataset_updated.txt")
+    def last_updated_path(root_path):
+        return project_root(f"swiss_army_man/ml/{root_path}dataset_updated.txt")
 
     @staticmethod
-    def read_last_updated():
-        with open(DateSplitter.last_updated_path(), "r") as f:
+    def read_last_updated(root_path):
+        with open(DateSplitter.last_updated_path(root_path), "r") as f:
             return f.read()
 
     @staticmethod
-    def write_last_updated():
-        with open(DateSplitter.last_updated_path(), "w") as f:
+    def write_last_updated(root_path):
+        with open(DateSplitter.last_updated_path(root_path), "w") as f:
             f.write(str(datetime.now()))
 
     @staticmethod
-    def files_have_changed():
+    def files_have_changed(root_path):
         if DateSplitter.last_updated is None:
-            DateSplitter.set_last_updated()
+            DateSplitter.set_last_updated(root_path)
 
-        return DateSplitter.last_updated != DateSplitter.read_last_updated()
+        return DateSplitter.last_updated != DateSplitter.read_last_updated(root_path)
 
     @staticmethod
     def get_days_ago(days_ago, date=datetime.now()):

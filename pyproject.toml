@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "swiss-army-man"
-version = "0.1.19"
+version = "0.1.20"
 description = ""
 authors = ["Brett Shollenberger <brettshollenberger@gmail.com>"]
 readme = "README.md"
@@ -17,6 +17,10 @@ tqdm = "^4.66.2"
 twine = "^5.0.0"
 pyyaml = "^6.0.1"
 psycopg2 = "^2.9.9"
+pyhelpers = "^1.5.2"
+joblib = "^1.4.0"
+fastai = "^2.7.14"
+pyarrow = "^16.0.0"
 
 
 [build-system]
