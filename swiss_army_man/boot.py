@@ -2,6 +2,7 @@ try:
     class Bootloader():
         @staticmethod
         def boot():
+            print("Booting...")
             from django.apps import apps
             from dotenv import load_dotenv
 
@@ -15,7 +16,7 @@ try:
 
         @staticmethod
         def after_boot():
-            # noop
+            print("oh no it's the old me")
             return True
 
     Bootloader.boot()
