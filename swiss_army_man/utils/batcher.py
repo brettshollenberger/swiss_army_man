@@ -43,7 +43,9 @@ class Batcher():
     def date_range(kwargs):
         start_date, end_date = Batcher.parse_date(kwargs)
         dates = pd.date_range(start=start_date, end=end_date)
-        return [date for date in dates]
+        if "format" in kwargs.keys():
+            dates = dates.dt.strftime(format)
+        return dates.tolist()
 
     @staticmethod
     def group_by_time_period(dates_list, period):
