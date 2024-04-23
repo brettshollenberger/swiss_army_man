@@ -8,6 +8,6 @@ try:
             super().before_boot()
 
     JupyterBootloader().boot()
-except
+except:
     # Not in Django environment, nbd
     True
