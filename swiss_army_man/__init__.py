@@ -1,3 +1,4 @@
+from .proj_root import *
 from .environment import *
 from .redis_cache import RedisCache
 from .database_manager import DatabaseManager
@@ -5,7 +6,6 @@ from .file_utils import *
 from .grep import *
 from .is_iterable import *
 from .parse_datetime import *
-from .proj_root import *
 from .query_to_df import *
 from .sidekiq import Sidekiq
 from .singleton import *
