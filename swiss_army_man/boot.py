@@ -19,6 +19,8 @@ try:
                 # Join the list back into a string and set the environment variable
                 new_pythonpath = os.pathsep.join(pythonpath_list)
                 os.environ['PYTHONPATH'] = new_pythonpath
+            if os.path.exists(project_root(".env")):
+                load_dotenv(project_root(".env"))
 
         def boot(self):
             self.before_boot()
