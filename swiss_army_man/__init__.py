@@ -5,7 +5,7 @@ from .file_utils import *
 from .grep import *
 from .is_iterable import *
 from .parse_datetime import *
-from .project_root import *
+from .proj_root import *
 from .query_to_df import *
 from .sidekiq import Sidekiq
 from .singleton import *
