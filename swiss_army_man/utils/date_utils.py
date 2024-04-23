@@ -137,6 +137,8 @@ class DateUtils():
             grouped.append(dates)
         return grouped
 
+    # Given a datetime, add minutes based on a poisson distribution (e.g. most of the time, the median number of minutes
+    # will be added, but sometimes it will extend into the rest of the distribution)
     @staticmethod
     def add_minutes_poisson(date: str, avg_minutes_to_add: int) -> str:
         minutes = poisson.rvs(avg_minutes_to_add)
