@@ -37,8 +37,6 @@ try:
 
         def after_boot(self):
             return True
-
-    Bootloader().boot()
 except:
     # nbd...
     True
