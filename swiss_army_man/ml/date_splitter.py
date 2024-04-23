@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import pyarrow as pa
 import pyarrow.parquet as pq
-from swiss_army_man.utils import project_root, standardize_and_sort_dates
+from swiss_army_man.utils import project_root, DateUtils
 from swiss_army_man.ml import AssetPreprocessor
 
 class DateSplitter():
@@ -103,7 +103,7 @@ class DateSplitter():
         test_date_start, validation_date_start = DateSplitter.get_date_splits()
         # Read only the necessary columns for filtering
         split_df = pd.read_parquet(file_path, columns=[split_col])
-        split_df = standardize_and_sort_dates(split_df)
+        split_df = DateUtils.standardize_and_sort_dates(split_df)
         split_df = split_df.reset_index(drop=True)
         
         assert split_df[split_col].isna().sum() == 0, "There are NaN dates in the DataFrame"
@@ -140,7 +140,7 @@ class DateSplitter():
         train_indices, test_indices, valid_indices = DateSplitter.get_split_indexes(file_path, date_col)
 
         df = pq.read_table(file_path).to_pandas()
-        df = standardize_and_sort_dates(df)
+        df = DateUtils.standardize_and_sort_dates(df)
         print(f"Train indices: {train_indices[0]} - {train_indices[1]}")
         X_train = df.iloc[train_indices[0]:train_indices[1]]
         X_test = df.iloc[test_indices[0]:test_indices[1]]
