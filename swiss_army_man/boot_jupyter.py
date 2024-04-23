@@ -6,6 +6,8 @@ try:
             os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
             os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
             super().before_boot()
-except:
+
+    JupyterBootloader().boot()
+except
     # Not in Django environment, nbd
     True
