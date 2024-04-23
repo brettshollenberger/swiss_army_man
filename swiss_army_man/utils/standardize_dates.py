@@ -16,7 +16,7 @@ def standardize_dates(df, date_col="CREATED_DATE"):
     df["DATE"] = pd.to_datetime(df[date_col].dt.date)
     return df
 
-def standardize_and_sort_dates(df):
+def standardize_and_sort_dates(df, date_col):
     df = standardize_dates(df)
     df = df.sort_values(by=[date_col], ascending=True)
     return df

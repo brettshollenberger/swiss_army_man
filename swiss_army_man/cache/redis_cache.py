@@ -4,7 +4,7 @@ import os
 import json
 import yaml
 from typing import Callable
-from . import project_root
+from .. import project_root
 from tqdm import tqdm
 
 class RedisCache:

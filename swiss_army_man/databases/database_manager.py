@@ -1,7 +1,7 @@
 import os
 import psycopg2
 from contextlib import contextmanager
-from . import project_root, db_config
+from .. import project_root, db_config
 class DatabaseManager():
     @contextmanager
     @staticmethod

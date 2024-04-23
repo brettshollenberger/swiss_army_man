@@ -1,6 +1,6 @@
 import json
 import uuid
-from . import RedisCache
+from .. import RedisCache
 
 class Sidekiq():
     @classmethod

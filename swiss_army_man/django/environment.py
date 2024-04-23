@@ -2,7 +2,7 @@ import os
 import re
 import sys
 import yaml
-from . import project_root
+from .. import project_root
 
 def erb_substitute(match):
     env_var = match.group(1)
