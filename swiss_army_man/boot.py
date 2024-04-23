@@ -1,7 +1,7 @@
 try:
-    class Bootloader():
-        @staticmethod
-        def boot():
+    from abc import ABC
+    class Bootloader(ABC):
+        def boot(self):
             print("Booting...")
             from django.apps import apps
             from dotenv import load_dotenv
@@ -12,14 +12,13 @@ try:
 
                 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
                 django.setup()
-            Bootloader.after_boot()
+            print("After boot...")
+            self.after_boot()
 
-        @staticmethod
-        def after_boot():
-            print("oh no it's the old me")
+        def after_boot(self):
             return True
 
-    Bootloader.boot()
+    Bootloader().boot()
 except:
     # nbd...
     True
