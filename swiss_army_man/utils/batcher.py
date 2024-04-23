@@ -44,7 +44,7 @@ class Batcher():
         start_date, end_date = Batcher.parse_date(kwargs)
         dates = pd.Series(pd.date_range(start=start_date, end=end_date))
         if "format" in kwargs.keys():
-            dates = dates.dt.strftime(format)
+            dates = dates.dt.strftime(kwargs["format"])
         return dates.tolist()
 
     @staticmethod
