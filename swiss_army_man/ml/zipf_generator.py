@@ -12,7 +12,7 @@ class ZipfGenerator():
     def __init__(self, items, popularity_ranks=None, s=1.5):
         self.items = items
         if popularity_ranks is not None:
-            self.popularity_ranks = popularity_ranks
+            self.popularity_ranks = np.array(popularity_ranks)
         else:
             self.popularity_ranks = zipf.rvs(s, size=len(items))
 
