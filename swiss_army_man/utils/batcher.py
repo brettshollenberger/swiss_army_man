@@ -16,8 +16,11 @@ class Batcher():
     def generate_batches(items = [], kwargs = {}):
         batches = Batcher.get_batches(items, kwargs)
         batches = Batcher.start_and_end(batches)
-        uuids = [{'block_uuid': f'batch_{i}'} for i in range(len(batches))]
-        return [ batches, uuids ]
+        if kwargs["mage"]:
+            uuids = [{'block_uuid': f'batch_{i}'} for i in range(len(batches))]
+            return [ batches, uuids ]
+        else:
+            return batches
 
     @staticmethod
     def get_batches(items = [], kwargs = {}):
@@ -41,6 +44,7 @@ class Batcher():
             return DateUtils.group_by_time_period(date_range, 'M')
         elif batch_size == "year":
             return DateUtils.group_by_time_period(date_range, 'A')
+
         return date_range
 
     @staticmethod
