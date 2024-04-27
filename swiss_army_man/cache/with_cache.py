@@ -26,7 +26,7 @@ def with_cache(key_func, force=False, cache_type="redis", expires_in=None):
             cache_key = key_func(**key_args_needed) if callable(key_func) else key_func
 
             current_time = time.time()
-            entry = cache_store.get(cache_key, {'timestamp': 0, 'value': None})
+            entry = cache_store.get(cache_key) or {'timestamp': 0, 'value': None}
 
             # Calculate expiry if provided
             if expires_in is not None:
@@ -43,7 +43,7 @@ def with_cache(key_func, force=False, cache_type="redis", expires_in=None):
                 cache_store.set(cache_key, {'timestamp': current_time, 'value': result})
                 return result
 
-            return entry['value']
+            return cache_store.get(cache_key)['value']
 
         return wrapper
     return decorator
