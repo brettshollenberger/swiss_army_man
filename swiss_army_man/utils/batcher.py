@@ -16,7 +16,7 @@ class Batcher():
     def generate_batches(items = [], kwargs = {}):
         batches = Batcher.get_batches(items, kwargs)
         batches = Batcher.start_and_end(batches)
-        if kwargs["mage"]:
+        if "mage" in kwargs.keys():
             uuids = [{'block_uuid': f'batch_{i}'} for i in range(len(batches))]
             return [ batches, uuids ]
         else:
@@ -46,6 +46,12 @@ class Batcher():
             return DateUtils.group_by_time_period(date_range, 'A')
 
         return date_range
+
+    @staticmethod
+    def reconstruct(batch):
+        batch_start = batch[0]
+        batch_end = batch[1]
+        return DateUtils.date_range({"start_date": batch_start, "end_date": batch_end})
 
     @staticmethod
     def start_and_end(batches):
