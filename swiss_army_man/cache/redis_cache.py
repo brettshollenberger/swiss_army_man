@@ -33,7 +33,7 @@ class RedisCache:
 
     def get(self, key):
         raw_value = self.REDIS.get(key)
-        return pickle.loads(raw_value)
+        return None if raw_value is None else pickle.loads(raw_value)
 
     def set(self, key, value):
         value = pickle.dumps(value)
