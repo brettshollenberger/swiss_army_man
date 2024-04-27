@@ -6,6 +6,7 @@ import yaml
 from typing import Callable
 from .. import project_root
 from tqdm import tqdm
+from contextlib import contextmanager
 
 class RedisCache:
     def __init__(self, conf=None):
@@ -43,6 +44,7 @@ class RedisCache:
         else:
             return raw_value
 
+    @contextmanager
     def fetch(self, key):
         val = self.get(key)
         if val:
