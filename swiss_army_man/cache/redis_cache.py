@@ -33,26 +33,11 @@ class RedisCache:
 
     def get(self, key):
         raw_value = self.REDIS.get(key)
-        redis_type = self.REDIS.get(f"{key}_type")
-
-        if redis_type and redis_type.decode('utf-8') == "json":
-            # Ensure raw_value is decoded before json.loads
-            return json.loads(raw_value.decode('utf-8'))
-        elif redis_type and redis_type.decode("utf-8") == "pickle":
-            return pickle.loads(raw_value)
-        else:
-            return raw_value
+        return pickle.loads(raw_value)
 
     def set(self, key, value):
-        if isinstance(value, dict):
-            value = json.dumps(value)
-            redis_type = "json"
-        else:
-            value = pickle.dumps(value)
-            redis_type = "pickle"
-
+        value = pickle.dumps(value)
         self.REDIS.set(key, value)
-        self.REDIS.set(f"{key}_type", redis_type)
 
     def lpush(self, key, value):
         return self.REDIS.lpush(key, value)

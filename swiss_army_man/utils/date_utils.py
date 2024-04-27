@@ -73,31 +73,47 @@ class DateUtils():
     # It first attempts to parse the date using common date formats. If the parsing fails, it then tries to interpret
     # the string as a relative date (e.g., "2 days ago") and calculates the absolute date accordingly.
     @staticmethod
-    def parse_relative_date(date_str: str) -> str:
+    def parse_relative_date(date_str: str, format="%Y-%m-%d") -> str:
         # Use regular expression to extract number and unit (e.g., days, years)
-        match = re.match(r"(\d+)\s+(day|week|month|year)s?\s+ago", date_str)
+        match = re.match(r"(\d+)\s+(day|week|month|year|hour|minute|seconds)s?\s+(ago|from now)", date_str)
         if not match:
             raise ValueError("Date string format should be '<number> <days/weeks/months/years> ago'")
 
         number = int(match.group(1))
         unit = match.group(2)
+        ago_from_now = match.group(3)
+        if ago_from_now == "ago":
+            operation = lambda x: current_date - x
+        else:
+            operation = lambda x: current_date + x
 
         # Determine the current date
         current_date = datetime.now()
 
-        # Subtract the appropriate amount of time based on the unit
-        if unit == "day":
-            result_date = current_date - timedelta(days=number)
+        # Add/Subtract the appropriate amount of time based on the unit
+        if unit == "second":
+            offset = timedelta(seconds=number)
+        elif unit == "minute":
+            offset = timedelta(minutes=number)
+        elif unit == "hour":
+            offset = timedelta(hours=number)
+        elif unit == "day":
+            offset = timedelta(days=number)
         elif unit == "week":
-            result_date = current_date - timedelta(weeks=number)
+            offset = timedelta(weeks=number)
         elif unit == "month":
-            result_date = current_date - relativedelta(months=number)
+            offset = relativedelta(months=number)
         elif unit == "year":
-            result_date = current_date - relativedelta(years=number)
+            offset = relativedelta(years=number)
         else:
             raise ValueError("Unsupported time unit. Use 'day', 'week', 'month', or 'year'.")
 
-        return result_date.strftime("%Y-%m-%d")
+        result = operation(offset)
+
+        if format == "seconds":
+            return int((result - current_date).total_seconds())
+        else:
+            return result.strftime("%Y-%m-%d")
 
     
     # This method, `date_range`, takes a dictionary of keyword arguments and returns a list of dates between a specified start and end date.

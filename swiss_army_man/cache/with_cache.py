@@ -1,10 +1,12 @@
+import time
 from functools import wraps
 from .redis_cache import RedisCache
+from swiss_army_man.utils import DateUtils
 
 CACHES = {
     "redis": RedisCache
 }
-def cache(key_func, force=False, cache_type="redis"):
+def with_cache(key_func, force=False, cache_type="redis", expires_in="1 minute from now"):
     cache_store = CACHES[cache_type]()
     def decorator(func):
         @wraps(func)
@@ -15,16 +17,16 @@ def cache(key_func, force=False, cache_type="redis"):
             else:
                 cache_key = key_func
 
+            current_time = time.time()
+            entry = cache_store.get(cache_key, {'timestamp': 0, 'value': None})
+            expiry = DateUtils.parse_relative_date(expires_in, format="seconds")
+
             # Check if force refreshing is needed
-            if force or kwargs.get('force', False):
+            if force or (kwargs.get('force', False)) or (entry['timestamp'] == 0) or (current_time - entry['timestamp'] > expiry):
                 result = func(*args, **kwargs)
-                cache_store.set(cache_key, result)
+                cache_store.set(cache_key, {'timestamp': current_time, 'value': result})
                 return result
 
-            # Retrieve from cache or call the function
-            if cache_key not in cache_store:
-                result = func(*args, **kwargs)
-                cache_store.set(cache_key, result)
             return cache_store.get(cache_key)
         return wrapper
     return decorator
