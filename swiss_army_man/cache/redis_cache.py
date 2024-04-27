@@ -6,7 +6,6 @@ import yaml
 from typing import Callable
 from .. import project_root
 from tqdm import tqdm
-from contextlib import contextmanager
 
 class RedisCache:
     def __init__(self, conf=None):
@@ -39,18 +38,10 @@ class RedisCache:
         if redis_type and redis_type.decode('utf-8') == "json":
             # Ensure raw_value is decoded before json.loads
             return json.loads(raw_value.decode('utf-8'))
-        elif redis_type == "pickle":
+        elif redis_type and redis_type.decode("utf-8") == "pickle":
             return pickle.loads(raw_value)
         else:
             return raw_value
-
-    @contextmanager
-    def fetch(self, key):
-        val = self.get(key)
-        if val:
-            return val
-        else:
-            yield self
 
     def set(self, key, value):
         if isinstance(value, dict):
