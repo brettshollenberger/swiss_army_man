@@ -30,6 +30,6 @@ def with_cache(key_func, force=False, cache_type="redis", expires_in=None):
                 cache_store.set(cache_key, {'timestamp': current_time, 'value': result})
                 return result
 
-            return cache_store.get(cache_key)
+            return cache_store.get(cache_key)['value']
         return wrapper
     return decorator
