@@ -4,6 +4,7 @@ from .batcher import Batcher
 from .file_utils import *
 from .grep import *
 from .is_iterable import *
+from .list_utils import *
 from .parse_datetime import *
 from .singleton import *
 from .string_methods import *
