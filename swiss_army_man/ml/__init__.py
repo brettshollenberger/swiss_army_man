@@ -3,4 +3,4 @@ from .analyze import *
 from .date_splitter import *
 from .zipf_generator import ZipfGenerator
 from .normalize import *
-from .guassian_generator import GuassianGenerator
+from .gaussian_generator import GaussianGenerator

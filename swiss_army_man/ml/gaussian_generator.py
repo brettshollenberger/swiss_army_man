@@ -1,7 +1,7 @@
 import numpy as np
 from swiss_army_man.ml import normalize
 
-class GuassianGenerator():
+class GaussianGenerator():
     def __init__(self, items):
         self.items = items
         self.distribution = normalize(np.random.normal(loc=1, scale=1, size=len(items)))
