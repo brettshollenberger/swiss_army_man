@@ -14,4 +14,4 @@ class GaussianGenerator():
             return [self.one_random() for _ in range(len)]
 
     def one_random(self):
-        return np.random.choice(self.items, p=self.probability)
+        return np.random.choice(self.items, p=self.probabilities)
