@@ -8,3 +8,4 @@ from .list_utils import *
 from .parse_datetime import *
 from .singleton import *
 from .string_methods import *
+from .type_checks import *

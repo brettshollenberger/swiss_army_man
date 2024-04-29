@@ -2,7 +2,6 @@ try:
     from abc import ABC
     class Bootloader(ABC):
         def before_boot(self):
-            print("Before boot...")
             import sys
             import os
             from dotenv import load_dotenv
@@ -25,7 +24,6 @@ try:
 
         def boot(self):
             self.before_boot()
-            print("Booting...")
             from django.apps import apps
             from dotenv import load_dotenv
 
@@ -35,11 +33,9 @@ try:
 
                 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
                 django.setup()
-            print("After boot...")
             self.after_boot()
 
         def after_boot(self):
-            print("After boot...")
             return True
 except:
     # nbd...
