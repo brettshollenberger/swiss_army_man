@@ -13,10 +13,10 @@ def with_cache(key_func, force=False, cache_type="redis", expires_in=None):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # Fetch function's arguments
             sig = signature(func)
-            func_args = {param.name: kwargs.get(param.name, param.default) if param.default is not param.empty else None
-                         for param in sig.parameters.values()}
+            bound_args = sig.bind(*args, **kwargs)
+            bound_args.apply_defaults()
+            func_args = bound_args.arguments
             
             # Determine required arguments for key_func by inspecting its signature
             key_func_signature = signature(key_func)
