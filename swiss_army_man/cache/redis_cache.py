@@ -31,6 +31,9 @@ class RedisCache:
             # Delete each matching key
             self.REDIS.delete(key)
 
+    def delete(self, key):
+        return self.REDIS.delete(key)
+
     def get(self, key):
         raw_value = self.REDIS.get(key)
         return None if raw_value is None else pickle.loads(raw_value)

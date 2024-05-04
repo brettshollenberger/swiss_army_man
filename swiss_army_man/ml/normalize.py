@@ -1,4 +1,4 @@
-from sklearn.preprocessing import MinMaxScaler
+import numpy as np
 
 def normalize(data):
-    return MinMaxScaler().fit_transform(data.reshape(-1,1)).reshape(-1)
+    return data / np.max(data)
