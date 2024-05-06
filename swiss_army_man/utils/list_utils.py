@@ -6,3 +6,6 @@ def flatten(nested_list):
         else:
             flat_list.append(item)
     return flat_list
+
+def compact(l):
+    return [x for x in l if x is not None]
