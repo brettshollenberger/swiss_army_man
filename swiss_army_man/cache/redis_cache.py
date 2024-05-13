@@ -8,18 +8,19 @@ from .. import project_root
 from tqdm import tqdm
 
 class RedisCache:
-    def __init__(self, conf=None):
-        if conf is not None:
-            self.CONFIG = conf
-        else:
-            # Pass these into the Docker container using the docker-compose.yml file and the .env file
-            redis_host = os.getenv('REDIS_HOST', 'localhost')
-            redis_port = os.getenv('REDIS_PORT', 6379)
-            self.CONFIG = { 'REDIS_HOST': redis_host, 'REDIS_PORT': redis_port, 'REDIS_DB': 0 }
+    def __init__(self, config={}):
+        default_config = {
+            "host": os.getenv("REDIS_HOST", "localhost"),
+            "port": os.getenv("REDIS_PORT", 6379),
+            "db": 0,
+            "max_connections": 30,
+        }
+        self.CONFIG = {
+            **default_config,
+            **config
+        }
 
-        self.REDIS_POOL = redis.ConnectionPool(
-            host=self.CONFIG['REDIS_HOST'], port=self.CONFIG['REDIS_PORT'], db=self.CONFIG['REDIS_DB'])
-
+        self.REDIS_POOL = redis.ConnectionPool(**self.CONFIG)
         self.REDIS = redis.Redis(connection_pool=self.REDIS_POOL)
 
     def clear(self, redis_prefix: str):
