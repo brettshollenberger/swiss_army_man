@@ -4,10 +4,13 @@ import os
 import json
 import yaml
 from typing import Callable
-from .. import project_root
+from swiss_army_man.utils import project_root, Singleton
 from tqdm import tqdm
 
-class RedisCache:
+# Because we use the Singleton pattern here, the connection pool will be shared
+# across the entire app everywhere it's imported. Due to this, you may want to initialize
+# it on app creation in order to pass your preferred configuration in a single place.
+class RedisCache(Singleton):
     def __init__(self, config={}):
         default_config = {
             "host": os.getenv("REDIS_HOST", "localhost"),
@@ -33,19 +36,15 @@ class RedisCache:
             self.REDIS.delete(key)
 
     def delete(self, key):
-        with self.REDIS.client() as client:
-            return client.delete(key)
+        return self.REDIS.delete(key)
 
     def get(self, key):
-        with self.REDIS.client() as client:
-            raw_value = client.get(key)
-            return None if raw_value is None else pickle.loads(raw_value)
+        raw_value = self.REDIS.get(key)
+        return None if raw_value is None else pickle.loads(raw_value)
 
     def set(self, key, value):
-        with self.REDIS.client() as client:
-            value = pickle.dumps(value)
-            return client.set(key, value)
+        value = pickle.dumps(value)
+        return self.REDIS.set(key, value)
 
     def lpush(self, key, value):
-        with self.REDIS.client() as client:
-            return client.lpush(key, value)
+        return self.REDIS.lpush(key, value)
